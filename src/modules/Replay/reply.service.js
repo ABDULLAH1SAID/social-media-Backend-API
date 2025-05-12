@@ -3,14 +3,14 @@ export class ReplyService {
         this.replayRepository = replayRepository;
     }
 
-    async createReply(userId, content, postId, commentId, parentReplay, next) {
-        if(parentReplay) {
-            const parentReplyDoc = await this.replayRepository.getReplyById(parentReplay);
+    async createReply(userId, content, postId, commentId, parentReply, next) {
+        if(parentReply) {
+            const parentReplyDoc = await this.replayRepository.getReplyById(parentReply);
             if (!parentReplyDoc) {
                 return next(new Error('Parent reply not found'));
             }
         }
-        const reply = await this.replayRepository.createReply(userId, content, postId, commentId, parentReplay);
+        const reply = await this.replayRepository.createReply(userId, content, postId, commentId, parentReply);
         if (!reply) {
             return next(new Error('Failed to create reply'));
         }
@@ -46,9 +46,23 @@ export class ReplyService {
         }
         console.log(deletedReply);
         return deletedReply;
-
-
-
     }
 
+    async getRepliesByCommentId(commentId, next) {
+
+        const replies = await this.replayRepository.getRepliesByCommentId(commentId);
+        if (!replies) {
+             return next(new Error('Failed to fetch replies'));
+        }
+        return replies;
+    }
+
+    async getNestedReplies(replyId, next) {
+        
+        const nestedReplies =  await this.replayRepository.getNestedReplies(replyId);
+        if (!nestedReplies) {
+            return next(new Error('Failed to fetch nested replies'));
+        }
+        return nestedReplies;
+    }
 }

@@ -29,5 +29,25 @@ export class ReplyRepository {
         const deletedReply = await Reply.findByIdAndDelete(replyId);
         return deletedReply;
     };
-}
+      getRepliesByCommentId = async (commentId) => {
+        
+        return await Reply.find({ 
+            commentId: commentId, 
+            parentReply: null 
+        })
+        .populate({
+            path: 'createdBy',
+            select: 'name profileImage',
+        });
+    };
 
+
+    getNestedReplies = async (replyId) => {
+        return await Reply.find({ parentReply: replyId })
+            .populate({
+                path: 'createdBy',
+                select: 'name profileImage',
+            });
+    };
+
+}

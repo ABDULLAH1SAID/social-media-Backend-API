@@ -18,7 +18,24 @@ export class ReplyController {
              message: 'Reply created successfully',
              reply });
     });
+    getRepliesByComment = asyncHandler(async (req, res, next) => {
+        const { commentId } = req.params;
 
+        const replies = await replyService.getRepliesByCommentId(commentId, next);
+
+        return res.status(200).json({ success: true,
+             message: 'Replies fetched successfully',
+             replies });
+    });
+    getNestedReplies = asyncHandler(async (req, res, next) => {
+        const { replyId } = req.params;
+        const nestedReplies = await replyService.getNestedReplies(replyId, next);
+
+        return res.status(200).json({ success: true,
+             message: 'Nested replies fetched successfully',
+             nestedReplies });
+    });
+    
     updateReply = asyncHandler(async (req, res, next) => {
         const userId = req.user._id;   
         const { replyId } = req.params;
@@ -41,6 +58,7 @@ export class ReplyController {
              message: 'Reply deleted successfully',
              deletedReply });
     });
+
 }
 
 

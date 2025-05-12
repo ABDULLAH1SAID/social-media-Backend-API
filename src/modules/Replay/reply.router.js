@@ -11,7 +11,16 @@ router.post("/", isAuthenticated,
      validation(replySchema.createReply),
         replyController.createReply, 
 );
-// get all replies to a comment or reply
+// get all replies to comment or reply to reply
+router.get("/", isAuthenticated,
+        validation(replySchema.getRepliesByComment),
+        replyController.getRepliesByComment,
+);
+// get nested replies to comment or reply to reply
+router.get("/:replyId", isAuthenticated,
+        validation(replySchema.getNestedReplies),
+        replyController.getNestedReplies,
+);
 
 // update reply to comment or reply to reply
 router.put("/:replyId", isAuthenticated,
